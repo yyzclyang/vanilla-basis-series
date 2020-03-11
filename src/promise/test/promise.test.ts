@@ -19,4 +19,8 @@ describe('Promise', () => {
       new Promise(null);
     }).toThrow(TypeError);
   });
+  test('new Promise(fn) 会生成一个对象，对象有 then 方法', () => {
+    const promise = new Promise(() => {});
+    expect(promise.then).toBeInstanceOf(Function);
+  });
 });

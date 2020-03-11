@@ -4,6 +4,7 @@ class PROMISE {
       throw new TypeError(`Promise resolver ${executor} is not a function`);
     }
   }
+  then() {}
 }
 
 export default PROMISE;
