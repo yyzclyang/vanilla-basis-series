@@ -23,9 +23,15 @@ describe('Promise', () => {
     const promise = new Promise(() => {});
     expect(promise.then).toBeInstanceOf(Function);
   });
-  test('new Promise(fn), fn 会立即执行', () => {
+  test('new Promise(fn)，fn 会立即执行', () => {
     const fn = jest.fn();
     new Promise(fn);
     expect(fn).toBeCalled();
+  });
+  test('new Promise(fn)，fn 执行的时候接受 resolve 和 reject 两个函数', () => {
+    new Promise((resolve, reject) => {
+      expect(resolve).toBeInstanceOf(Function);
+      expect(reject).toBeInstanceOf(Function);
+    });
   });
 });
