@@ -1,5 +1,5 @@
 class PROMISE {
-  private status;
+  public status;
   private value;
   constructor(executor) {
     if (typeof executor !== 'function') {
@@ -22,10 +22,16 @@ class PROMISE {
     }
   }
   resolve(value) {
+    if (this.status !== 'pending') {
+      return;
+    }
     this.status = 'fulfilled';
     this.value = value;
   }
   reject(reason) {
+    if (this.status !== 'pending') {
+      return;
+    }
     this.status = 'rejected';
     this.value = reason;
   }

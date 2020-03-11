@@ -59,4 +59,38 @@ describe('Promise', () => {
     jest.runAllTimers();
     expect(spy).toBeCalled();
   });
+  it('2.2.2 resolve 之后改变状态，并调用 then 的第一个函数，且只会调用一次', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    const promise = new Promise((resolve, reject) => {
+      resolve(1);
+      resolve(2);
+      reject(3);
+    });
+    expect(promise.status).toEqual('fulfilled');
+    promise.then((value) => {
+      expect(value).toEqual(1);
+      spy1();
+    }, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledTimes(1);
+    expect(spy2).toBeCalledTimes(0);
+  });
+  it('2.2.3 reject 之后改变状态，并调用 then 的第二个函数，且只会调用一次', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    const promise = new Promise((resolve, reject) => {
+      reject(1);
+      reject(2);
+      resolve(3);
+    });
+    expect(promise.status).toEqual('rejected');
+    promise.then(spy1, (reason) => {
+      expect(reason).toEqual(1);
+      spy2();
+    });
+    jest.runAllTimers();
+    expect(spy1).toBeCalledTimes(0);
+    expect(spy2).toBeCalledTimes(1);
+  });
 });
