@@ -9,5 +9,9 @@
   },
   "author": "yyzcl <yyzclyang@outlook.com>",
   "license": "MIT",
-  "homepage": "https://github.com/yyzclyang/imitate-vanilla-series#readme"
+  "homepage": "https://github.com/yyzclyang/imitate-vanilla-series#readme",
+  "devDependencies": {
+    "prettier": "^1.19.1",
+    "typescript": "^3.8.3"
+  }
 }
