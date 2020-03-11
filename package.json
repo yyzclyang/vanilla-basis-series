@@ -10,6 +10,10 @@
   "author": "yyzcl <yyzclyang@outlook.com>",
   "license": "MIT",
   "homepage": "https://github.com/yyzclyang/imitate-vanilla-series#readme",
+  "scripts": {
+    "test": "jest",
+    "ci": "jest --coverage"
+  },
   "devDependencies": {
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
