@@ -3,6 +3,7 @@ class PROMISE {
     if (typeof executor !== 'function') {
       throw new TypeError(`Promise resolver ${executor} is not a function`);
     }
+    executor();
   }
   then() {}
 }

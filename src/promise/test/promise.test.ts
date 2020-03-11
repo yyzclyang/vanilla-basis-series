@@ -23,4 +23,9 @@ describe('Promise', () => {
     const promise = new Promise(() => {});
     expect(promise.then).toBeInstanceOf(Function);
   });
+  test('new Promise(fn), fn 会立即执行', () => {
+    const fn = jest.fn();
+    new Promise(fn);
+    expect(fn).toBeCalled();
+  });
 });
