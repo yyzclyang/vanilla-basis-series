@@ -9,9 +9,26 @@ class PROMISE {
     this.value = null;
     executor(this.resolve.bind(this), this.reject.bind(this));
   }
-  then() {}
-  resolve() {}
-  reject() {}
+  then(onFulfilled?, onRejected?) {
+    if (this.status === 'fulfilled') {
+      setTimeout(() => {
+        onFulfilled(this.value);
+      });
+    }
+    if (this.status === 'rejected') {
+      setTimeout(() => {
+        onRejected(this.value);
+      });
+    }
+  }
+  resolve(value) {
+    this.status = 'fulfilled';
+    this.value = value;
+  }
+  reject(reason) {
+    this.status = 'rejected';
+    this.value = reason;
+  }
 }
 
 export default PROMISE;

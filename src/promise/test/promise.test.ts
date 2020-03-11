@@ -1,5 +1,12 @@
 import Promise from '../';
 
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+afterEach(() => {
+  jest.useRealTimers();
+});
+
 describe('Promise', () => {
   test('是一个类', () => {
     expect(Promise).toBeInstanceOf(Function);
@@ -33,5 +40,23 @@ describe('Promise', () => {
       expect(resolve).toBeInstanceOf(Function);
       expect(reject).toBeInstanceOf(Function);
     });
+  });
+  test('promise.then(success)，success 会在 resolve 被调用的时候执行', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      resolve();
+    }).then(spy);
+    expect(spy).not.toBeCalled();
+    jest.runAllTimers();
+    expect(spy).toBeCalled();
+  });
+  test('promise.then(success,fail)，fail 会在 reject 被调用的时候执行', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      reject();
+    }).then(() => {}, spy);
+    expect(spy).not.toBeCalled();
+    jest.runAllTimers();
+    expect(spy).toBeCalled();
   });
 });
