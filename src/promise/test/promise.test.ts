@@ -350,4 +350,124 @@ describe('Promise', () => {
       jest.runAllTimers();
     }).toThrow(TypeError);
   });
+  test('2.3.2 如果 onFulfilled 返回的是一个 promise，采用 promise 的状态', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    new Promise((resolve, reject) => {
+      resolve();
+    })
+      .then(
+        () =>
+          new Promise((resolve, reject) => {
+            resolve('x');
+          })
+      )
+      .then(spy1);
+    new Promise((resolve, reject) => {
+      resolve();
+    })
+      .then(
+        () =>
+          new Promise((resolve, reject) => {
+            reject('y');
+          })
+      )
+      .then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x');
+    expect(spy2).toBeCalledWith('y');
+  });
+  test('2.3.2 如果 onRejected 返回的是一个 promise，采用 promise 的状态', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    new Promise((resolve, reject) => {
+      reject();
+    })
+      .then(
+        undefined,
+        () =>
+          new Promise((resolve, reject) => {
+            resolve('x');
+          })
+      )
+      .then(spy1);
+    new Promise((resolve, reject) => {
+      reject();
+    })
+      .then(
+        undefined,
+        () =>
+          new Promise((resolve, reject) => {
+            reject('y');
+          })
+      )
+      .then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x');
+    expect(spy2).toBeCalledWith('y');
+  });
+  test('2.3.2 （executor 的 resolve 异步执行）如果 onFulfilled 返回的是一个 promise，采用 promise 的状态', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      });
+    })
+      .then(
+        () =>
+          new Promise((resolve, reject) => {
+            resolve('x');
+          })
+      )
+      .then(spy1);
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      });
+    })
+      .then(
+        () =>
+          new Promise((resolve, reject) => {
+            reject('y');
+          })
+      )
+      .then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x');
+    expect(spy2).toBeCalledWith('y');
+  });
+  test('2.3.2 （executor 的 reject 异步执行）如果 onRejected 返回的是一个 promise，采用 promise 的状态', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject();
+      });
+    })
+      .then(
+        undefined,
+        () =>
+          new Promise((resolve, reject) => {
+            resolve('x');
+          })
+      )
+      .then(spy1);
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject();
+      });
+    })
+      .then(
+        undefined,
+        () =>
+          new Promise((resolve, reject) => {
+            reject('y');
+          })
+      )
+      .then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x');
+    expect(spy2).toBeCalledWith('y');
+  });
 });

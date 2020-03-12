@@ -32,7 +32,11 @@ class PROMISE {
               if (result === promise) {
                 throw new TypeError('Chaining cycle detected for promise');
               } else {
-                resolve(result);
+                if (result instanceof PROMISE) {
+                  result.then(resolve, reject);
+                } else {
+                  resolve(result);
+                }
               }
             });
           },
@@ -47,7 +51,11 @@ class PROMISE {
               if (result === promise) {
                 throw new TypeError('Chaining cycle detected for promise');
               } else {
-                resolve(result);
+                if (result instanceof PROMISE) {
+                  result.then(resolve, reject);
+                } else {
+                  resolve(result);
+                }
               }
             });
           }
@@ -64,7 +72,11 @@ class PROMISE {
           if (result === promise) {
             throw new TypeError('Chaining cycle detected for promise');
           } else {
-            resolve(result);
+            if (result instanceof PROMISE) {
+              result.then(resolve, reject);
+            } else {
+              resolve(result);
+            }
           }
         });
       }
@@ -79,7 +91,11 @@ class PROMISE {
           if (result === promise) {
             throw new TypeError('Chaining cycle detected for promise');
           } else {
-            resolve(result);
+            if (result instanceof PROMISE) {
+              result.then(resolve, reject);
+            } else {
+              resolve(result);
+            }
           }
         });
       }
