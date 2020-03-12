@@ -21,18 +21,26 @@ class PROMISE {
     return new PROMISE((resolve, reject) => {
       if (this.status === 'pending') {
         this.callbacks.push({
-          onFulfilled,
-          onRejected
+          onFulfilled: (value) => {
+            const result = onFulfilled(value);
+            resolve(result);
+          },
+          onRejected: (reason) => {
+            const result = onRejected(reason);
+            resolve(result);
+          }
         });
       }
       if (this.status === 'fulfilled') {
         setTimeout(() => {
-          onFulfilled(this.value);
+          const result = onFulfilled(this.value);
+          resolve(result);
         });
       }
       if (this.status === 'rejected') {
         setTimeout(() => {
-          onRejected(this.value);
+          const result = onRejected(this.value);
+          resolve(result);
         });
       }
     });

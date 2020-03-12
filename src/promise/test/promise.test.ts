@@ -203,4 +203,65 @@ describe('Promise', () => {
     const promise2 = promise1.then();
     expect(promise2).toBeInstanceOf(Promise);
   });
+  test('2.2.7.1 如果 onFulfilled 或 onRejected 返回一个值 x, 运行 Promise Resolution Procedure [[Resolve]](promise2, x)', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    new Promise((resolve, reject) => {
+      resolve();
+    })
+      .then(() => 'x')
+      .then(spy1);
+    new Promise((resolve, reject) => {
+      reject();
+    })
+      .then(undefined, () => 'y')
+      .then(spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x');
+    expect(spy2).toBeCalledWith('y');
+  });
+  test('2.2.7.1 如果 onFulfilled 返回一个值 x, 运行 Promise Resolution Procedure [[Resolve]](promise2, x)', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      resolve();
+    })
+      .then(() => 'x')
+      .then(spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith('x');
+  });
+  test('2.2.7.1 如果 onRejected 返回一个值 x, 运行 Promise Resolution Procedure [[Resolve]](promise2, x)', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      reject();
+    })
+      .then(undefined, () => 'y')
+      .then(spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith('y');
+  });
+  test('2.2.7.1 （executor 的 resolve 异步执行）如果 onFulfilled 返回一个值 x, 运行 Promise Resolution Procedure [[Resolve]](promise2, x)', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      });
+    })
+      .then(() => 'x')
+      .then(spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith('x');
+  });
+  test('2.2.7.1 （executor 的 reject 异步执行）如果 onRejected 返回一个值 x, 运行 Promise Resolution Procedure [[Resolve]](promise2, x)', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject();
+      });
+    })
+      .then(undefined, () => 'y')
+      .then(spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith('y');
+  });
 });
