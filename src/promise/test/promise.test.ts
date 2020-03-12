@@ -103,4 +103,22 @@ describe('Promise', () => {
     expect(spy2).toBeCalledTimes(1);
     expect(spy2).toBeCalledWith(1);
   });
+  test('2.2.4 在代码执行完毕之前，不得调用 then 的函数（resolve）', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      resolve();
+    }).then(spy);
+    expect(spy).toBeCalledTimes(0);
+    jest.runAllTimers();
+    expect(spy).toBeCalledTimes(1);
+  });
+  test('2.2.4 在代码执行完毕之前，不得调用 then 的函数（reject）', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      reject();
+    }).then(undefined, spy);
+    expect(spy).toBeCalledTimes(0);
+    jest.runAllTimers();
+    expect(spy).toBeCalledTimes(1);
+  });
 });
