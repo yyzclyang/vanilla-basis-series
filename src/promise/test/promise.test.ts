@@ -59,25 +59,31 @@ describe('Promise', () => {
     jest.runAllTimers();
     expect(spy).toBeCalled();
   });
-  test('promise(executor)，executor 的参数 resolve 异步执行时，then 方法的函数正常执行', () => {
-    const spy = jest.fn();
+  test('promise(executor)，executor 的参数 resolve 异步执行时，then 方法的函数正常异步执行', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
     new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
+        spy2();
       }, 100);
-    }).then(spy);
+    }).then(spy1);
     jest.runAllTimers();
-    expect(spy).toBeCalled();
+    expect(spy1).toBeCalled();
+    expect(spy2).toHaveBeenCalledBefore(spy1);
   });
-  test('promise(executor)，executor 的参数 reject 异步执行时，then 方法的函数正常执行', () => {
-    const spy = jest.fn();
+  test('promise(executor)，executor 的参数 reject 异步执行时，then 方法的函数正常异步执行', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
     new Promise((resolve, reject) => {
       setTimeout(() => {
         reject();
+        spy2();
       }, 100);
-    }).then(undefined, spy);
+    }).then(undefined, spy1);
     jest.runAllTimers();
-    expect(spy).toBeCalled();
+    expect(spy1).toBeCalled();
+    expect(spy2).toHaveBeenCalledBefore(spy1);
   });
   test('2.2.1 then 的参数不是函数就忽略', () => {
     const promise1 = new Promise((resolve, reject) => {

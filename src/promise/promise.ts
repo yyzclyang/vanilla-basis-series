@@ -22,12 +22,16 @@ class PROMISE {
       if (this.status === 'pending') {
         this.callbacks.push({
           onFulfilled: (value) => {
-            const result = onFulfilled(value);
-            resolve(result);
+            setTimeout(() => {
+              const result = onFulfilled(value);
+              resolve(result);
+            });
           },
           onRejected: (reason) => {
-            const result = onRejected(reason);
-            resolve(result);
+            setTimeout(() => {
+              const result = onRejected(reason);
+              resolve(result);
+            });
           }
         });
       }
