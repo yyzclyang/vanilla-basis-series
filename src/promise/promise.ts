@@ -23,28 +23,44 @@ class PROMISE {
         this.callbacks.push({
           onFulfilled: (value) => {
             setTimeout(() => {
-              const result = onFulfilled(value);
-              resolve(result);
+              try {
+                const result = onFulfilled(value);
+                resolve(result);
+              } catch (error) {
+                reject(error);
+              }
             });
           },
           onRejected: (reason) => {
             setTimeout(() => {
-              const result = onRejected(reason);
-              resolve(result);
+              try {
+                const result = onRejected(reason);
+                resolve(result);
+              } catch (error) {
+                reject(error);
+              }
             });
           }
         });
       }
       if (this.status === 'fulfilled') {
         setTimeout(() => {
-          const result = onFulfilled(this.value);
-          resolve(result);
+          try {
+            const result = onFulfilled(this.value);
+            resolve(result);
+          } catch (error) {
+            reject(error);
+          }
         });
       }
       if (this.status === 'rejected') {
         setTimeout(() => {
-          const result = onRejected(this.value);
-          resolve(result);
+          try {
+            const result = onRejected(this.value);
+            resolve(result);
+          } catch (error) {
+            reject(error);
+          }
         });
       }
     });

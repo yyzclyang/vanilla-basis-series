@@ -270,4 +270,28 @@ describe('Promise', () => {
     jest.runAllTimers();
     expect(spy).toBeCalledWith('y');
   });
+  test('2.2.7.2 如果 onFulfilled 抛出一个异常 e，promise2 必须被拒绝（rejected）并把 e 当作原因', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      resolve();
+    })
+      .then(() => {
+        throw new Error();
+      })
+      .then(undefined, spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith(new Error());
+  });
+  test('2.2.7.2 如果 onRejected 抛出一个异常 e，promise2 必须被拒绝（rejected）并把 e 当作原因', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      reject();
+    })
+      .then(undefined, () => {
+        throw new Error();
+      })
+      .then(undefined, spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith(new Error());
+  });
 });
