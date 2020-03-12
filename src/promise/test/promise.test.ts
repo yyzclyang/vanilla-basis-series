@@ -59,7 +59,21 @@ describe('Promise', () => {
     jest.runAllTimers();
     expect(spy).toBeCalled();
   });
-  it('2.2.2 resolve 之后改变状态，并调用 then 的第一个函数，且只会调用一次', () => {
+  test('2.2.1 then 的参数不是函数就忽略', () => {
+    const promise1 = new Promise((resolve, reject) => {
+      resolve();
+    });
+    const promise2 = new Promise((resolve, reject) => {
+      reject();
+    });
+    expect(() => {
+      promise1.then(undefined);
+    }).not.toThrow();
+    expect(() => {
+      promise2.then(() => {}, undefined);
+    }).not.toThrow();
+  });
+  test('2.2.2 resolve 之后改变状态，并调用 then 的第一个函数，且只会调用一次', () => {
     const spy1 = jest.fn();
     const spy2 = jest.fn();
     const promise = new Promise((resolve, reject) => {
@@ -76,7 +90,7 @@ describe('Promise', () => {
     expect(spy1).toBeCalledTimes(1);
     expect(spy2).toBeCalledTimes(0);
   });
-  it('2.2.3 reject 之后改变状态，并调用 then 的第二个函数，且只会调用一次', () => {
+  test('2.2.3 reject 之后改变状态，并调用 then 的第二个函数，且只会调用一次', () => {
     const spy1 = jest.fn();
     const spy2 = jest.fn();
     const promise = new Promise((resolve, reject) => {

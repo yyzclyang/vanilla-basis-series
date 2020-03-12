@@ -10,6 +10,12 @@ class PROMISE {
     executor(this.resolve.bind(this), this.reject.bind(this));
   }
   then(onFulfilled?, onRejected?) {
+    if (typeof onFulfilled !== 'function') {
+      onFulfilled = () => {};
+    }
+    if (typeof onRejected !== 'function') {
+      onRejected = () => {};
+    }
     if (this.status === 'fulfilled') {
       setTimeout(() => {
         onFulfilled(this.value);
