@@ -314,4 +314,40 @@ describe('Promise', () => {
     jest.runAllTimers();
     expect(spy).toBeCalledWith('x');
   });
+  test('2.3.1 如果 promise 和 onFulfilled 的返回值引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+    expect(() => {
+      const promise = new Promise((resolve, reject) => {
+        resolve();
+      }).then(() => promise);
+      jest.runAllTimers();
+    }).toThrow(TypeError);
+  });
+  test('2.3.1 如果 promise 和 onRejected 的返回值x 引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+    expect(() => {
+      const promise = new Promise((resolve, reject) => {
+        reject();
+      }).then(undefined, () => promise);
+      jest.runAllTimers();
+    }).toThrow(TypeError);
+  });
+  test('2.3.1 （executor 的 resolve 异步执行）如果 promise 和 onFulfilled 的返回值引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+    expect(() => {
+      const promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve();
+        });
+      }).then(() => promise);
+      jest.runAllTimers();
+    }).toThrow(TypeError);
+  });
+  test('2.3.1 （executor 的 reject 异步执行）如果 promise 和 onRejected 的返回值x 引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+    expect(() => {
+      const promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject();
+        });
+      }).then(undefined, () => promise);
+      jest.runAllTimers();
+    }).toThrow(TypeError);
+  });
 });
