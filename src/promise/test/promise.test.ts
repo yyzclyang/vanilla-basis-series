@@ -294,4 +294,24 @@ describe('Promise', () => {
     jest.runAllTimers();
     expect(spy).toBeCalledWith(new Error());
   });
+  test('2.2.7.3 如果 onFulfilled 不是一个方法，并且 promise1 已经完成（fulfilled），promise2 必须使用与 promise1 相同的值来完成（fulfilled）', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      resolve('x');
+    })
+      .then()
+      .then(spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith('x');
+  });
+  test('2.2.7.4 如果 onRejected 不是一个方法，并且 promise1 已经被拒绝（rejected），promise2 必须使用与 promise1 相同的值来完成（rejected）', () => {
+    const spy = jest.fn();
+    new Promise((resolve, reject) => {
+      reject('x');
+    })
+      .then()
+      .then(undefined, spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith('x');
+  });
 });

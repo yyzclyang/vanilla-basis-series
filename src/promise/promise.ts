@@ -12,13 +12,13 @@ class PROMISE {
     executor(this.resolve.bind(this), this.reject.bind(this));
   }
   then(onFulfilled?, onRejected?) {
-    if (typeof onFulfilled !== 'function') {
-      onFulfilled = () => {};
-    }
-    if (typeof onRejected !== 'function') {
-      onRejected = () => {};
-    }
     return new PROMISE((resolve, reject) => {
+      if (typeof onFulfilled !== 'function') {
+        onFulfilled = resolve;
+      }
+      if (typeof onRejected !== 'function') {
+        onRejected = reject;
+      }
       if (this.status === 'pending') {
         this.callbacks.push({
           onFulfilled: (value) => {
