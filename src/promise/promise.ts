@@ -18,22 +18,24 @@ class PROMISE {
     if (typeof onRejected !== 'function') {
       onRejected = () => {};
     }
-    if (this.status === 'pending') {
-      this.callbacks.push({
-        onFulfilled,
-        onRejected
-      });
-    }
-    if (this.status === 'fulfilled') {
-      setTimeout(() => {
-        onFulfilled(this.value);
-      });
-    }
-    if (this.status === 'rejected') {
-      setTimeout(() => {
-        onRejected(this.value);
-      });
-    }
+    return new PROMISE((resolve, reject) => {
+      if (this.status === 'pending') {
+        this.callbacks.push({
+          onFulfilled,
+          onRejected
+        });
+      }
+      if (this.status === 'fulfilled') {
+        setTimeout(() => {
+          onFulfilled(this.value);
+        });
+      }
+      if (this.status === 'rejected') {
+        setTimeout(() => {
+          onRejected(this.value);
+        });
+      }
+    });
   }
   resolve(value) {
     if (this.status !== 'pending') {

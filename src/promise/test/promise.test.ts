@@ -196,4 +196,11 @@ describe('Promise', () => {
     expect(spy1).toHaveBeenCalledBefore(spy2);
     expect(spy2).toHaveBeenCalledBefore(spy3);
   });
+  test('2.2.7 then 必须返回一个 Promise', () => {
+    const promise1 = new Promise((resolve, reject) => {
+      resolve();
+    });
+    const promise2 = promise1.then();
+    expect(promise2).toBeInstanceOf(Promise);
+  });
 });
