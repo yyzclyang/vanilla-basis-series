@@ -121,4 +121,25 @@ describe('Promise', () => {
     jest.runAllTimers();
     expect(spy).toBeCalledTimes(1);
   });
+  test('2.2.5 then 的函数被调用时，不能有 this（resolve）', () => {
+    new Promise((resolve) => {
+      resolve();
+    }).then(function() {
+      'use strict';
+      expect(this).toEqual(undefined);
+    });
+    jest.runAllTimers();
+  });
+  test('2.2.5 then 的函数被调用时，不能有 this（reject）', () => {
+    new Promise((resolve, reject) => {
+      reject();
+    }).then(
+      () => {},
+      function() {
+        'use strict';
+        expect(this).toEqual(undefined);
+      }
+    );
+    jest.runAllTimers();
+  });
 });
