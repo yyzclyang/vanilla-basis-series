@@ -142,4 +142,38 @@ describe('Promise', () => {
     );
     jest.runAllTimers();
   });
+  test('2.2.6 then 可以在同一个 promise 中多次调用（resolve）', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    const spy3 = jest.fn();
+    const promise = new Promise((resolve, reject) => {
+      resolve();
+    });
+    promise.then(spy1);
+    promise.then(spy2);
+    promise.then(spy3);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledTimes(1);
+    expect(spy2).toBeCalledTimes(1);
+    expect(spy3).toBeCalledTimes(1);
+    expect(spy1).toHaveBeenCalledBefore(spy2);
+    expect(spy2).toHaveBeenCalledBefore(spy3);
+  });
+  test('2.2.6 then 可以在同一个 promise 中多次调用（reject）', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    const spy3 = jest.fn();
+    const promise = new Promise((resolve, reject) => {
+      reject();
+    });
+    promise.then(undefined, spy1);
+    promise.then(undefined, spy2);
+    promise.then(undefined, spy3);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledTimes(1);
+    expect(spy2).toBeCalledTimes(1);
+    expect(spy3).toBeCalledTimes(1);
+    expect(spy1).toHaveBeenCalledBefore(spy2);
+    expect(spy2).toHaveBeenCalledBefore(spy3);
+  });
 });
