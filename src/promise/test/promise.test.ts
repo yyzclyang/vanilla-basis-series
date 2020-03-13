@@ -314,41 +314,73 @@ describe('Promise', () => {
     jest.runAllTimers();
     expect(spy).toBeCalledWith('x');
   });
-  test('2.3.1 如果 promise 和 onFulfilled 的返回值引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+  test('2.3.1 如果 promise 和 resolve 的参数值引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
     expect(() => {
       const promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(promise);
+        });
+      });
+      jest.runAllTimers();
+    }).toThrowError(TypeError);
+  });
+  test('2.3.1 如果 promise 和 reject 的参数值引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+    expect(() => {
+      const promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject(promise);
+        });
+      });
+      jest.runAllTimers();
+    }).toThrowError(TypeError);
+  });
+  test('2.3.1 如果 promise2 和 onFulfilled 的返回值引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+    const spy = jest.fn();
+    const promise2 = new Promise((resolve, reject) => {
+      resolve();
+    }).then(() => promise2);
+    promise2.then(undefined, spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith(
+      new TypeError('Chaining cycle detected for promise')
+    );
+  });
+  test('2.3.1 如果 promise2 和 onRejected 的返回值x 引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+    const spy = jest.fn();
+    const promise2 = new Promise((resolve, reject) => {
+      reject();
+    }).then(undefined, () => promise2);
+    promise2.then(undefined, spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith(
+      new TypeError('Chaining cycle detected for promise')
+    );
+  });
+  test('2.3.1 （executor 的 resolve 异步执行）如果 promise2 和 onFulfilled 的返回值引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+    const spy = jest.fn();
+    const promise2 = new Promise((resolve, reject) => {
+      setTimeout(() => {
         resolve();
-      }).then(() => promise);
-      jest.runAllTimers();
-    }).toThrow(TypeError);
+      });
+    }).then(() => promise2);
+    promise2.then(undefined, spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith(
+      new TypeError('Chaining cycle detected for promise')
+    );
   });
-  test('2.3.1 如果 promise 和 onRejected 的返回值x 引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
-    expect(() => {
-      const promise = new Promise((resolve, reject) => {
+  test('2.3.1 （executor 的 reject 异步执行）如果 promise2 和 onRejected 的返回值x 引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
+    const spy = jest.fn();
+    const promise2 = new Promise((resolve, reject) => {
+      setTimeout(() => {
         reject();
-      }).then(undefined, () => promise);
-      jest.runAllTimers();
-    }).toThrow(TypeError);
-  });
-  test('2.3.1 （executor 的 resolve 异步执行）如果 promise 和 onFulfilled 的返回值引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
-    expect(() => {
-      const promise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve();
-        });
-      }).then(() => promise);
-      jest.runAllTimers();
-    }).toThrow(TypeError);
-  });
-  test('2.3.1 （executor 的 reject 异步执行）如果 promise 和 onRejected 的返回值x 引用同一个对象，则用 TypeError 作为原因拒绝（reject）promise。', () => {
-    expect(() => {
-      const promise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          reject();
-        });
-      }).then(undefined, () => promise);
-      jest.runAllTimers();
-    }).toThrow(TypeError);
+      });
+    }).then(undefined, () => promise2);
+    promise2.then(undefined, spy);
+    jest.runAllTimers();
+    expect(spy).toBeCalledWith(
+      new TypeError('Chaining cycle detected for promise')
+    );
   });
   test('2.3.2 如果 onFulfilled 返回的是一个 promise，采用 promise 的状态', () => {
     const spy1 = jest.fn();
