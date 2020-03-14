@@ -725,4 +725,17 @@ describe('Promise', () => {
     expect(spy2).toBeCalledWith('y');
     expect(spy3).toBeCalledWith('z');
   });
+  test('Promise.all 静态方法', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    const p1 = Promise.resolve('x1');
+    const p2 = Promise.resolve('x2');
+    const p3 = Promise.resolve('x3');
+    const p4 = Promise.reject('x4');
+    Promise.all([p1, p2, p3]).then(spy1);
+    Promise.all([p1, p2, p3, p4]).then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalled();
+    expect(spy2).toBeCalledWith('x4');
+  });
 });

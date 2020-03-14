@@ -159,6 +159,19 @@ class PROMISE {
       }
     });
   }
+  static all(promiseArray) {
+    return new PROMISE((resolve, reject) => {
+      const results = [];
+      promiseArray.forEach((promise) => {
+        promise.then((value) => {
+          results.push(value);
+          if (results.length === promiseArray.length) {
+            resolve(results);
+          }
+        }, reject);
+      });
+    });
+  }
 }
 
 export default PROMISE;
