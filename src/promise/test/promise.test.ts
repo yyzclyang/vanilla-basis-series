@@ -652,4 +652,24 @@ describe('Promise', () => {
       expect(spy2).toBeCalledWith(new Error());
     }).not.toThrow(Error);
   });
+  test('2.3.3.4 如果 then 不是一个函数，用 x 完成(fulfill)promise', () => {
+    const spy1 = jest.fn();
+    const x1 = {
+      then: 'then'
+    };
+    new Promise((resolve, reject) => {
+      resolve(x1);
+    }).then(spy1);
+    const spy2 = jest.fn();
+    const x2 = {
+      then: 'then'
+    };
+    new Promise((resolve, reject) => {
+      reject(x2);
+    }).then(undefined, spy2);
+
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith(x1);
+    expect(spy2).toBeCalledWith(x2);
+  });
 });
