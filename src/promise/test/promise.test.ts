@@ -566,4 +566,36 @@ describe('Promise', () => {
     expect(spy1).toBeCalledWith('x');
     expect(spy2).toBeCalledWith('y');
   });
+  test('2.3.3.3.3 如果 resolvePromise 和 rejectPromise 都被调用，或者对同一个参数进行多次调用，第一次调用执行，任何进一步的调用都被忽略', () => {
+    const spy1 = jest.fn();
+    const x1 = {
+      then: function(resolvePromise, rejectPromise) {
+        resolvePromise('x1');
+        resolvePromise('x1');
+        resolvePromise('x2');
+        rejectPromise('x3');
+      }
+    };
+    new Promise((resolve, reject) => {
+      reject(x1);
+    }).then(spy1);
+
+    const spy2 = jest.fn();
+    const x2 = {
+      then: function(resolvePromise, rejectPromise) {
+        rejectPromise('y1');
+        rejectPromise('y1');
+        rejectPromise('y2');
+        resolvePromise('y3');
+      }
+    };
+    new Promise((resolve, reject) => {
+      resolve(x2);
+    }).then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledTimes(1);
+    expect(spy1).toBeCalledWith('x1');
+    expect(spy2).toBeCalledTimes(1);
+    expect(spy2).toBeCalledWith('y1');
+  });
 });
