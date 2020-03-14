@@ -738,4 +738,33 @@ describe('Promise', () => {
     expect(spy1).toBeCalled();
     expect(spy2).toBeCalledWith('x4');
   });
+  test('Promise.all 静态方法', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    const p1 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('p1');
+      }, 100);
+    });
+    const p2 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('p2');
+      }, 200);
+    });
+    const p3 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject('p3');
+      }, 100);
+    });
+    const p4 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject('p4');
+      }, 200);
+    });
+    Promise.race([p1, p2, p4]).then(spy1);
+    Promise.race([p2, p3, p4]).then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('p1');
+    expect(spy2).toBeCalledWith('p3');
+  });
 });

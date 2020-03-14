@@ -172,6 +172,13 @@ class PROMISE {
       });
     });
   }
+  static race(promiseArray) {
+    return new PROMISE((resolve, reject) => {
+      promiseArray.forEach((promise) => {
+        promise.then(resolve, reject);
+      });
+    });
+  }
 }
 
 export default PROMISE;
