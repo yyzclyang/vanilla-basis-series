@@ -598,4 +598,58 @@ describe('Promise', () => {
     expect(spy2).toBeCalledTimes(1);
     expect(spy2).toBeCalledWith('y1');
   });
+  test('2.3.3.3.4.1 如果调用 then 抛出一个异常 e：如果 resolvePromise 或 rejectPromise 已被调用，忽略；', () => {
+    expect(() => {
+      const spy1 = jest.fn();
+      const x1 = {
+        then: function(resolvePromise, rejectPromise) {
+          resolvePromise('x');
+          throw new Error();
+        }
+      };
+      new Promise((resolve, reject) => {
+        resolve(x1);
+      }).then(spy1);
+      const spy2 = jest.fn();
+      const x2 = {
+        then: function(resolvePromise, rejectPromise) {
+          rejectPromise('y');
+          throw new Error();
+        }
+      };
+      new Promise((resolve, reject) => {
+        reject(x2);
+      }).then(undefined, spy2);
+
+      jest.runAllTimers();
+      expect(spy1).toBeCalledWith('x');
+      expect(spy2).toBeCalledWith('y');
+    }).not.toThrow(Error);
+  });
+  test('2.3.3.3.4.2 如果调用 then 抛出一个异常 e：如果 resolvePromise 或 rejectPromise 未被调用，用 e 作为 reason 拒绝（reject）promise', () => {
+    expect(() => {
+      const spy1 = jest.fn();
+      const x1 = {
+        then: function(resolvePromise, rejectPromise) {
+          throw new Error();
+        }
+      };
+      new Promise((resolve, reject) => {
+        resolve(x1);
+      }).then(undefined, spy1);
+      const spy2 = jest.fn();
+      const x2 = {
+        then: function(resolvePromise, rejectPromise) {
+          throw new Error();
+        }
+      };
+      new Promise((resolve, reject) => {
+        reject(x2);
+      }).then(undefined, spy2);
+
+      jest.runAllTimers();
+      expect(spy1).toBeCalledWith(new Error());
+      expect(spy2).toBeCalledWith(new Error());
+    }).not.toThrow(Error);
+  });
 });
