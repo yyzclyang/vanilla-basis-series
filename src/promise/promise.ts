@@ -16,7 +16,7 @@ class PROMISE {
     }
   }
   then(onFulfilled?, onRejected?) {
-    const promise = new PROMISE((resolve, reject) => {
+    const nextPromise = new PROMISE((resolve, reject) => {
       if (typeof onFulfilled !== 'function') {
         onFulfilled = resolve;
       }
@@ -27,76 +27,52 @@ class PROMISE {
         this.callbacks.push({
           onFulfilled: (value) => {
             setTimeout(() => {
-              try {
-                const result = onFulfilled(value);
-                if (result === promise) {
-                  reject(new TypeError('Chaining cycle detected for promise'));
-                }
-                if (result instanceof PROMISE) {
-                  result.then(resolve, reject);
-                } else {
-                  resolve(result);
-                }
-              } catch (error) {
-                reject(error);
-              }
+              this.executeOnFulfilledOrOnRejected(
+                nextPromise,
+                onFulfilled,
+                value,
+                resolve,
+                reject
+              );
             });
           },
           onRejected: (reason) => {
             setTimeout(() => {
-              try {
-                const result = onRejected(reason);
-                if (result === promise) {
-                  reject(new TypeError('Chaining cycle detected for promise'));
-                }
-                if (result instanceof PROMISE) {
-                  result.then(resolve, reject);
-                } else {
-                  resolve(result);
-                }
-              } catch (error) {
-                reject(error);
-              }
+              this.executeOnFulfilledOrOnRejected(
+                nextPromise,
+                onRejected,
+                reason,
+                resolve,
+                reject
+              );
             });
           }
         });
       }
       if (this.status === 'fulfilled') {
         setTimeout(() => {
-          try {
-            const result = onFulfilled(this.value);
-            if (result === promise) {
-              reject(new TypeError('Chaining cycle detected for promise'));
-            }
-            if (result instanceof PROMISE) {
-              result.then(resolve, reject);
-            } else {
-              resolve(result);
-            }
-          } catch (error) {
-            reject(error);
-          }
+          this.executeOnFulfilledOrOnRejected(
+            nextPromise,
+            onFulfilled,
+            this.value,
+            resolve,
+            reject
+          );
         });
       }
       if (this.status === 'rejected') {
         setTimeout(() => {
-          try {
-            const result = onRejected(this.value);
-            if (result === promise) {
-              reject(new TypeError('Chaining cycle detected for promise'));
-            }
-            if (result instanceof PROMISE) {
-              result.then(resolve, reject);
-            } else {
-              resolve(result);
-            }
-          } catch (error) {
-            reject(error);
-          }
+          this.executeOnFulfilledOrOnRejected(
+            nextPromise,
+            onRejected,
+            this.value,
+            resolve,
+            reject
+          );
         });
       }
     });
-    return promise;
+    return nextPromise;
   }
   resolve(value) {
     if (this.status !== 'pending') {
@@ -123,6 +99,27 @@ class PROMISE {
     this.callbacks.forEach((callback) => {
       callback.onRejected(reason);
     });
+  }
+  executeOnFulfilledOrOnRejected(
+    nextPromise,
+    executeFn,
+    value,
+    resolve,
+    reject
+  ) {
+    try {
+      const result = executeFn(value);
+      if (result === nextPromise) {
+        reject(new TypeError('Chaining cycle detected for promise'));
+      }
+      if (result instanceof PROMISE) {
+        result.then(resolve, reject);
+      } else {
+        resolve(result);
+      }
+    } catch (error) {
+      reject(error);
+    }
   }
 }
 
