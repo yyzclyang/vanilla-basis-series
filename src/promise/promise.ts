@@ -84,7 +84,11 @@ class PROMISE {
     if (value instanceof Object) {
       const then = value.then;
       if (typeof then === 'function') {
-        then.call(value, this.resolve.bind(this), this.reject.bind(this));
+        return then.call(
+          value,
+          this.resolve.bind(this),
+          this.reject.bind(this)
+        );
       }
     }
     this.status = 'fulfilled';
@@ -103,7 +107,11 @@ class PROMISE {
     if (reason instanceof Object) {
       const then = reason.then;
       if (typeof then === 'function') {
-        then.call(reason, this.resolve.bind(this), this.reject.bind(this));
+        return then.call(
+          reason,
+          this.resolve.bind(this),
+          this.reject.bind(this)
+        );
       }
     }
     this.status = 'rejected';

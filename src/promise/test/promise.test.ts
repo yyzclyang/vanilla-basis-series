@@ -514,4 +514,56 @@ describe('Promise', () => {
     jest.runAllTimers();
     expect(spy).toBeCalledTimes(2);
   });
+  test('2.3.3.3.1 如果当 resolvePromise被一个值 y 调用，运行 [[Resolve]](promise, y)', () => {
+    const spy1 = jest.fn();
+    const x1 = {
+      then: function(resolvePromise, rejectPromise) {
+        expect(this).toEqual(x1);
+        resolvePromise('x');
+      }
+    };
+    new Promise((resolve, reject) => {
+      resolve(x1);
+    }).then(spy1);
+
+    const spy2 = jest.fn();
+    const x2 = {
+      then: function(resolvePromise, rejectPromise) {
+        expect(this).toEqual(x2);
+        resolvePromise('y');
+      }
+    };
+    new Promise((resolve, reject) => {
+      reject(x2);
+    }).then(spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x');
+    expect(spy2).toBeCalledWith('y');
+  });
+  test('2.3.3.3.2 如果当 rejectPromise 被一个原因 r 调用，用 r 拒绝（reject）promise', () => {
+    const spy1 = jest.fn();
+    const x1 = {
+      then: function(resolvePromise, rejectPromise) {
+        expect(this).toEqual(x1);
+        rejectPromise('x');
+      }
+    };
+    new Promise((resolve, reject) => {
+      resolve(x1);
+    }).then(undefined, spy1);
+
+    const spy2 = jest.fn();
+    const x2 = {
+      then: function(resolvePromise, rejectPromise) {
+        expect(this).toEqual(x2);
+        rejectPromise('y');
+      }
+    };
+    new Promise((resolve, reject) => {
+      reject(x2);
+    }).then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x');
+    expect(spy2).toBeCalledWith('y');
+  });
 });
