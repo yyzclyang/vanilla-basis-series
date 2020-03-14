@@ -141,6 +141,24 @@ class PROMISE {
       reject(error);
     }
   }
+  static resolve(value) {
+    return new PROMISE((resolve, reject) => {
+      if (value instanceof PROMISE) {
+        value.then(resolve, reject);
+      } else {
+        resolve(value);
+      }
+    });
+  }
+  static reject(reason) {
+    return new PROMISE((resolve, reject) => {
+      if (reason instanceof PROMISE) {
+        reason.then(resolve, reject);
+      } else {
+        reject(reason);
+      }
+    });
+  }
 }
 
 export default PROMISE;
