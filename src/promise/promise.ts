@@ -81,6 +81,12 @@ class PROMISE {
     if (value === this) {
       throw new TypeError('Chaining cycle detected for promise');
     }
+    if (value instanceof Object) {
+      const then = value.then;
+      if (typeof then === 'function') {
+        then.call(value, this.resolve.bind(this), this.reject.bind(this));
+      }
+    }
     this.status = 'fulfilled';
     this.value = value;
     this.callbacks.forEach((callback) => {
@@ -93,6 +99,12 @@ class PROMISE {
     }
     if (reason === this) {
       throw new TypeError('Chaining cycle detected for promise');
+    }
+    if (reason instanceof Object) {
+      const then = reason.then;
+      if (typeof then === 'function') {
+        then.call(reason, this.resolve.bind(this), this.reject.bind(this));
+      }
     }
     this.status = 'rejected';
     this.value = reason;

@@ -502,4 +502,16 @@ describe('Promise', () => {
     expect(spy1).toBeCalledWith('x');
     expect(spy2).toBeCalledWith('y');
   });
+  test('2.3.3.3 如果 promise 的 resolve 或 reject 接受的 x 是一个 对象或函数，x.then 是一个方法，把 x 当作 this 来调用它， 第一个参数为 resolvePromise，第二个参数为 rejectPromise )', () => {
+    const spy = jest.fn();
+    const x = { then: spy };
+    new Promise((resolve, reject) => {
+      resolve(x);
+    });
+    new Promise((resolve, reject) => {
+      reject(x);
+    });
+    jest.runAllTimers();
+    expect(spy).toBeCalledTimes(2);
+  });
 });
