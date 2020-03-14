@@ -1,8 +1,19 @@
+type Status = 'pending' | 'fulfilled' | 'rejected';
+type OnFulfilled = (value?: any) => any;
+type OnRejected = (reason?: any) => any;
+type Resolve = (value?: any) => void;
+type Reject = (reason?: any) => void;
+type Callbacks = Array<{
+  onFulfilled: OnFulfilled;
+  onRejected: OnRejected;
+}>;
+type Executor = (resolve: Resolve, reject: Reject) => void;
+
 class PROMISE {
-  public status;
-  private value;
-  private callbacks;
-  constructor(executor) {
+  public status: Status;
+  private value: any;
+  private callbacks: Callbacks;
+  constructor(executor: Executor) {
     if (typeof executor !== 'function') {
       throw new TypeError(`Promise resolver ${executor} is not a function`);
     }
@@ -15,7 +26,7 @@ class PROMISE {
       this.reject(error);
     }
   }
-  then(onFulfilled?, onRejected?) {
+  then(onFulfilled?: OnFulfilled, onRejected?: OnRejected): PROMISE {
     const nextPromise = new PROMISE((resolve, reject) => {
       if (typeof onFulfilled !== 'function') {
         onFulfilled = resolve;
@@ -74,19 +85,19 @@ class PROMISE {
     });
     return nextPromise;
   }
-  resolve(value) {
+  private resolve(value?: any): void {
     this.resolveOrReject('resolve', value);
   }
-  reject(reason) {
+  private reject(reason?: any): void {
     this.resolveOrReject('reject', reason);
   }
-  executeOnFulfilledOrOnRejected(
-    nextPromise,
-    executeFn,
-    value,
-    resolve,
-    reject
-  ) {
+  private executeOnFulfilledOrOnRejected(
+    nextPromise: PROMISE,
+    executeFn: OnFulfilled | OnRejected,
+    value: any,
+    resolve: Resolve,
+    reject: Reject
+  ): void {
     try {
       const result = executeFn(value);
       if (result === nextPromise) {
@@ -101,7 +112,7 @@ class PROMISE {
       reject(error);
     }
   }
-  resolveOrReject(type, value) {
+  private resolveOrReject(type: 'resolve' | 'reject', value: any): void {
     if (this.status !== 'pending') {
       return;
     }
@@ -130,7 +141,7 @@ class PROMISE {
     });
   }
 
-  static resolve(value) {
+  static resolve(value: any): PROMISE {
     return new PROMISE((resolve, reject) => {
       if (value instanceof PROMISE) {
         value.then(resolve, reject);
@@ -139,7 +150,7 @@ class PROMISE {
       }
     });
   }
-  static reject(reason) {
+  static reject(reason: any): PROMISE {
     return new PROMISE((resolve, reject) => {
       if (reason instanceof PROMISE) {
         reason.then(resolve, reject);
@@ -148,7 +159,7 @@ class PROMISE {
       }
     });
   }
-  static all(promiseArray) {
+  static all(promiseArray: Array<PROMISE>): PROMISE {
     return new PROMISE((resolve, reject) => {
       const results = [];
       promiseArray.forEach((promise) => {
@@ -161,7 +172,7 @@ class PROMISE {
       });
     });
   }
-  static race(promiseArray) {
+  static race(promiseArray: Array<PROMISE>): PROMISE {
     return new PROMISE((resolve, reject) => {
       promiseArray.forEach((promise) => {
         promise.then(resolve, reject);
