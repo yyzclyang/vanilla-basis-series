@@ -672,4 +672,17 @@ describe('Promise', () => {
     expect(spy1).toBeCalledWith(x1);
     expect(spy2).toBeCalledWith(x2);
   });
+  test('2.3.4 如果 x 既不是对象也不是函数，用 x 完成(fulfill)promise', () => {
+    const spy1 = jest.fn();
+    new Promise((resolve, reject) => {
+      resolve('x1');
+    }).then(spy1);
+    const spy2 = jest.fn();
+    new Promise((resolve, reject) => {
+      reject('x2');
+    }).then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x1');
+    expect(spy2).toBeCalledWith('x2');
+  });
 });
