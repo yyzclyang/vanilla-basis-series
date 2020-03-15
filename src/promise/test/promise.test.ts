@@ -738,7 +738,7 @@ describe('Promise', () => {
     expect(spy1).toBeCalled();
     expect(spy2).toBeCalledWith('x4');
   });
-  test('Promise.all 静态方法', () => {
+  test('Promise.race 静态方法', () => {
     const spy1 = jest.fn();
     const spy2 = jest.fn();
     const p1 = new Promise((resolve, reject) => {
