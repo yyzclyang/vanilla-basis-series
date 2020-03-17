@@ -27,7 +27,7 @@ class PROMISE {
     }
   }
   then(onFulfilled?: OnFulfilled, onRejected?: OnRejected): PROMISE {
-    const nextPromise = new PROMISE((resolve, reject) => {
+    return new PROMISE((resolve, reject) => {
       if (typeof onFulfilled !== 'function') {
         onFulfilled = resolve;
       }
@@ -37,53 +37,40 @@ class PROMISE {
       if (this.status === 'pending') {
         this.callbacks.push({
           onFulfilled: (value) => {
-            setTimeout(() => {
-              this.executeOnFulfilledOrOnRejected(
-                nextPromise,
-                onFulfilled,
-                value,
-                resolve,
-                reject
-              );
-            });
+            this.executeOnFulfilledOrOnRejected(
+              onFulfilled,
+              value,
+              resolve,
+              reject
+            );
           },
           onRejected: (reason) => {
-            setTimeout(() => {
-              this.executeOnFulfilledOrOnRejected(
-                nextPromise,
-                onRejected,
-                reason,
-                resolve,
-                reject
-              );
-            });
+            this.executeOnFulfilledOrOnRejected(
+              onRejected,
+              reason,
+              resolve,
+              reject
+            );
           }
         });
       }
       if (this.status === 'fulfilled') {
-        setTimeout(() => {
-          this.executeOnFulfilledOrOnRejected(
-            nextPromise,
-            onFulfilled,
-            this.value,
-            resolve,
-            reject
-          );
-        });
+        this.executeOnFulfilledOrOnRejected(
+          onFulfilled,
+          this.value,
+          resolve,
+          reject
+        );
       }
       if (this.status === 'rejected') {
-        setTimeout(() => {
-          this.executeOnFulfilledOrOnRejected(
-            nextPromise,
-            onRejected,
-            this.value,
-            resolve,
-            reject
-          );
-        });
+        this.executeOnFulfilledOrOnRejected(
+          onRejected,
+          this.value,
+          resolve,
+          reject
+        );
       }
     });
-    return nextPromise;
   }
   private resolve(value?: any): void {
     this.resolveOrReject('resolve', value);
@@ -92,25 +79,19 @@ class PROMISE {
     this.resolveOrReject('reject', reason);
   }
   private executeOnFulfilledOrOnRejected(
-    nextPromise: PROMISE,
     executeFn: OnFulfilled | OnRejected,
     value: any,
     resolve: Resolve,
     reject: Reject
   ): void {
-    try {
-      const result = executeFn(value);
-      if (result === nextPromise) {
-        reject(new TypeError('Chaining cycle detected for promise'));
-      }
-      if (result instanceof PROMISE) {
-        result.then(resolve, reject);
-      } else {
+    setTimeout(() => {
+      try {
+        const result = executeFn.call(undefined, value);
         resolve(result);
+      } catch (error) {
+        reject(error);
       }
-    } catch (error) {
-      reject(error);
-    }
+    });
   }
   private resolveOrReject(type: 'resolve' | 'reject', value: any): void {
     if (this.status !== 'pending') {

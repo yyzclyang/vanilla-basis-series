@@ -382,6 +382,48 @@ describe('Promise', () => {
       new TypeError('Chaining cycle detected for promise')
     );
   });
+  test('2.3.2 如果 resolve 调用的是一个 promise，采用 promise 的状态', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    new Promise((resolve, reject) => {
+      resolve(
+        new Promise((resolve, reject) => {
+          reject('x');
+        })
+      );
+    }).then(undefined, spy1);
+    new Promise((resolve, reject) => {
+      resolve(
+        new Promise((resolve, reject) => {
+          resolve('y');
+        })
+      );
+    }).then(spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x');
+    expect(spy2).toBeCalledWith('y');
+  });
+  test('2.3.2 如果 reject 调用的是一个 promise，采用 promise 的状态', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    new Promise((resolve, reject) => {
+      reject(
+        new Promise((resolve, reject) => {
+          reject('x');
+        })
+      );
+    }).then(undefined, spy1);
+    new Promise((resolve, reject) => {
+      reject(
+        new Promise((resolve, reject) => {
+          resolve('y');
+        })
+      );
+    }).then(spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith('x');
+    expect(spy2).toBeCalledWith('y');
+  });
   test('2.3.2 如果 onFulfilled 返回的是一个 promise，采用 promise 的状态', () => {
     const spy1 = jest.fn();
     const spy2 = jest.fn();
