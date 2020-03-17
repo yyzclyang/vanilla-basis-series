@@ -133,10 +133,10 @@ class PROMISE {
     this.value = value;
     this.callbacks.forEach((callback) => {
       if (type === 'resolve') {
-        callback.onFulfilled(value);
+        callback.onFulfilled.call(undefined, value);
       }
       if (type === 'reject') {
-        callback.onRejected(value);
+        callback.onRejected.call(undefined, value);
       }
     });
   }
