@@ -544,6 +544,25 @@ describe('Promise', () => {
     expect(spy1).toBeCalledWith('x');
     expect(spy2).toBeCalledWith('y');
   });
+  test('2.3.3.2 如果取回 x.then 的结果抛出了一个异常，那么用作 promise reject 的原因', () => {
+    const spy1 = jest.fn();
+    const spy2 = jest.fn();
+    const x = {};
+    Object.defineProperty(x, 'then', {
+      get: function() {
+        throw new Error('y');
+      }
+    });
+    new Promise((resolve, reject) => {
+      resolve(x);
+    }).then(undefined, spy1);
+    new Promise((resolve, reject) => {
+      reject(x);
+    }).then(undefined, spy2);
+    jest.runAllTimers();
+    expect(spy1).toBeCalledWith(new Error('y'));
+    expect(spy2).toBeCalledWith(new Error('y'));
+  });
   test('2.3.3.3 如果 promise 的 resolve 或 reject 接受的 x 是一个 对象或函数，x.then 是一个方法，把 x 当作 this 来调用它， 第一个参数为 resolvePromise，第二个参数为 rejectPromise )', () => {
     const spy = jest.fn();
     const x = { then: spy };
