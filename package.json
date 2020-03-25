@@ -1,15 +1,15 @@
 {
-  "name": "imitate-vanilla-series",
+  "name": "vanilla-basis-series",
   "version": "0.0.1",
-  "description": "imitate vanilla series for learning",
+  "description": "vanilla basis series for learning",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yyzclyang/imitate-vanilla-series.git"
+    "url": "git+https://github.com/yyzclyang/vanilla-basis-series.git"
   },
   "author": "yyzcl <yyzclyang@outlook.com>",
   "license": "MIT",
-  "homepage": "https://github.com/yyzclyang/imitate-vanilla-series#readme",
+  "homepage": "https://github.com/yyzclyang/vanilla-basis-series#readme",
   "scripts": {
     "test": "jest",
     "ci": "jest --coverage"
