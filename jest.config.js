@@ -5,6 +5,6 @@
 
 module.exports = {
   roots: ['<rootDir>/src'],
-  testMatch: ['**/test/(*.test.)+(ts|js)'],
+  testMatch: ['**/__tests__/(*.test.)+(ts|js)'],
   setupFilesAfterEnv: ['jest-extended']
 };
