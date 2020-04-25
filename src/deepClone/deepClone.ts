@@ -61,6 +61,20 @@ function initResult(source: any) {
     case ObjectType.REGEXP: {
       return new RegExp(source.source, source.flags);
     }
+    case ObjectType.SET: {
+      const result = new Set();
+      source.forEach((value: any) => {
+        result.add(value);
+      });
+      return result;
+    }
+    case ObjectType.MAP: {
+      const result = new Map();
+      source.forEach((value: any, key: any) => {
+        result.set(key, value);
+      });
+      return result;
+    }
   }
 }
 

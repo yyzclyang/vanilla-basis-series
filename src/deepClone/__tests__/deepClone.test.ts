@@ -62,5 +62,18 @@ describe('deepClone', () => {
       const result = deepClone(source);
       expect(result).toEqual(source);
     });
+    test('能够复制 Set', () => {
+      const source = new Set([1, 2, 3]);
+      const result = deepClone(source);
+      expect(result).toEqual(source);
+    });
+    test('能够复制 Map', () => {
+      const source = new Map([
+        ['name', 'jack'],
+        ['pet', 'tom']
+      ]);
+      const result = deepClone(source);
+      expect(result).toEqual(source);
+    });
   });
 });
