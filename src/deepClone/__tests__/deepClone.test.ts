@@ -12,6 +12,18 @@ describe('deepClone', () => {
     });
   });
   describe('deepClone 复制对象', () => {
+    test('能够复制对象形式的数字、字符串、布尔值', () => {
+      const sources = [
+        new Number(123),
+        new String('123'),
+        new Boolean(true),
+        Object(Symbol('symbol'))
+      ];
+      sources.map((source) => {
+        const result = deepClone(source);
+        expect(result).toEqual(deepClone(source));
+      });
+    });
     test('能复制普通对象', () => {
       const source = {
         name: 'jack',
