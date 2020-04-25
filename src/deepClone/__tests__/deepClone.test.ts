@@ -47,5 +47,10 @@ describe('deepClone', () => {
       const result = deepClone(source);
       expect(result).toEqual(source);
     });
+    test('能复制 Error', () => {
+      const source = new Error();
+      const result = deepClone(source);
+      expect(result).toEqual(source);
+    });
   });
 });

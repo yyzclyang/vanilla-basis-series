@@ -52,6 +52,9 @@ function initResult(source: any) {
     case ObjectType.OBJECT: {
       return new Object();
     }
+    case ObjectType.ERROR: {
+      return new Error(source.message);
+    }
   }
 }
 
