@@ -1,6 +1,6 @@
 function deepClone(source: any) {
   if (typeof source === 'object' && source !== null) {
-    const result = {};
+    const result = Array.isArray(source) ? [] : {};
     for (const key in source) {
       if (source.hasOwnProperty(key)) {
         result[key] = deepClone(source[key]);

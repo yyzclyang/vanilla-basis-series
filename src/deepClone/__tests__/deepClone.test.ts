@@ -24,5 +24,10 @@ describe('deepClone', () => {
       const result = deepClone(source);
       expect(result).toEqual(source);
     });
+    test('能复制数组', () => {
+      const source = [1, '2', true, [3, ['4']], { name: 'jack' }];
+      const result = deepClone(source);
+      expect(result).toEqual(source);
+    });
   });
 });
