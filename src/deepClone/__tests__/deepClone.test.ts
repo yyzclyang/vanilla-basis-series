@@ -29,5 +29,11 @@ describe('deepClone', () => {
       const result = deepClone(source);
       expect(result).toEqual(source);
     });
+    test('能够复制环', () => {
+      const source = { name: 'jack', self: undefined };
+      source.self = source;
+      const result = deepClone(source);
+      expect(result).toEqual(source);
+    });
   });
 });
