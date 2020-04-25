@@ -55,6 +55,12 @@ function initResult(source: any) {
     case ObjectType.ERROR: {
       return new Error(source.message);
     }
+    case ObjectType.DATE: {
+      return new Date(source);
+    }
+    case ObjectType.REGEXP: {
+      return new RegExp(source.source, source.flags);
+    }
   }
 }
 

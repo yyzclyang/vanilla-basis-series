@@ -52,5 +52,15 @@ describe('deepClone', () => {
       const result = deepClone(source);
       expect(result).toEqual(source);
     });
+    test('能够复制日期', () => {
+      const source = new Date();
+      const result = deepClone(source);
+      expect(result).toEqual(source);
+    });
+    test('能够复制正则', () => {
+      const source = /hi\d+/gi;
+      const result = deepClone(source);
+      expect(result).toEqual(source);
+    });
   });
 });
