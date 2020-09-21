@@ -1,26 +1,28 @@
 {
-  "name": "imitate-vanilla-series",
+  "name": "vanilla-basis-series",
   "version": "0.0.1",
-  "description": "imitate vanilla series for learning",
+  "description": "vanilla basis series for learning",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yyzclyang/imitate-vanilla-series.git"
+    "url": "git+https://github.com/yyzclyang/vanilla-basis-series.git"
   },
   "author": "yyzcl <yyzclyang@outlook.com>",
   "license": "MIT",
-  "homepage": "https://github.com/yyzclyang/imitate-vanilla-series#readme",
+  "homepage": "https://github.com/yyzclyang/vanilla-basis-series#readme",
   "scripts": {
     "test": "jest",
     "ci": "jest --coverage"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.8.7",
     "@babel/preset-typescript": "^7.8.3",
     "@types/jest": "^25.1.4",
     "babel-jest": "^25.1.0",
     "jest": "^25.1.0",
+    "jest-extended": "^0.11.5",
     "prettier": "^1.19.1",
     "typescript": "^3.8.3"
   }

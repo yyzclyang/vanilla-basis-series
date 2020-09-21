@@ -1,1 +1,1 @@
-# imitate vanilla series
+# vanilla basis series

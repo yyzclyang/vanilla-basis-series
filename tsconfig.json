@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["jest"]
+    "lib": ["es6"],
+    "types": ["jest", "jest-extended"]
   }
 }
