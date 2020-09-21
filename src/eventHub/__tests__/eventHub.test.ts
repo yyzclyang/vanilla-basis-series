@@ -30,4 +30,11 @@ describe('EventHub', () => {
     eventHub.on('test-event', fn);
     expect(fn).not.toBeCalled();
   });
+  test('eventHub 订阅的事件函数可以通过 off 取消', () => {
+    const fn = jest.fn();
+    eventHub.on('test-event', fn);
+    eventHub.off('test-event', fn);
+    eventHub.emit('test-event');
+    expect(fn).not.toBeCalled();
+  });
 });
