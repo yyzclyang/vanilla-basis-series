@@ -1,5 +1,9 @@
 function BIND(thisArg) {
-  return function() {};
+  // this 即调用 bind 的函数
+  const thisFn = this;
+  return function() {
+    return thisFn.apply(thisArg);
+  };
 }
 
 export default BIND;
