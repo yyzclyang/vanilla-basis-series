@@ -42,4 +42,9 @@ describe('BIND', () => {
     expect(r2 === arg1).toBeTrue();
     expect(r3 === arg2).toBeTrue();
   });
+  test('不能被非函数调用', () => {
+    const obj = { BIND: null };
+    obj.BIND = Function.prototype.BIND;
+    expect(() => obj.BIND('this')).toThrowError(TypeError);
+  });
 });
