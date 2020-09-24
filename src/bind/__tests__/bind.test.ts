@@ -60,4 +60,11 @@ describe('BIND', () => {
     expect(o.arg1 === arg1).toBeTrue();
     expect(o.arg2 === arg2).toBeTrue();
   });
+  test('支持 new 操作符，原型链也正确', () => {
+    const fn = function() {};
+    const thisArg = 'this';
+    const bindFn = fn.BIND(thisArg);
+    const o = new bindFn();
+    expect(fn.prototype.isPrototypeOf(o)).toBeTrue();
+  });
 });

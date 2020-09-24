@@ -12,6 +12,9 @@ function BIND(thisArg: any, ...argArray: any[]) {
     );
   }
 
+  // 挂载原型链
+  boundFn.prototype = thisFn.prototype;
+
   return boundFn;
 }
 
