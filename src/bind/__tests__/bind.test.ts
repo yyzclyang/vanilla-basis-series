@@ -47,4 +47,17 @@ describe('BIND', () => {
     obj.BIND = Function.prototype.BIND;
     expect(() => obj.BIND('this')).toThrowError(TypeError);
   });
+  test('支持 new 操作符', () => {
+    const fn = function(arg1: string, arg2: any) {
+      this.arg1 = arg1;
+      this.arg2 = arg2;
+    };
+    const thisArg = 'this';
+    const arg1 = 'arg1';
+    const arg2 = {};
+    const bindFn = fn.BIND(thisArg, arg1);
+    const o = new bindFn(arg2);
+    expect(o.arg1 === arg1).toBeTrue();
+    expect(o.arg2 === arg2).toBeTrue();
+  });
 });
